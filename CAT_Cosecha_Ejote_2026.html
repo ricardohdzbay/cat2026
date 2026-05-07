@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAT — Cosecha de Ejote 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #F5F3EE;
+  --bg2:       #EDEAE3;
+  --bg3:       #E4E0D6;
+  --border:    #D4CFBF;
+  --border2:   #C4BEA8;
+  --text:      #1A1714;
+  --text2:     #6B6458;
+  --text3:     #9B9185;
+  --green:     #2D5A1B;
+  --green-bg:  #E8F0E3;
+  --blue:      #1A3A6B;
+  --blue-bg:   #E3EAF5;
+  --red:       #7A1F1F;
+  --red-bg:    #F5E3E3;
+  --accent:    #3D6B2A;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* HEADER */
+.app-header {
+  background: var(--text);
+  color: var(--bg);
+  padding: 20px 32px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  border-bottom: 2px solid var(--accent);
+}
+.app-header h1 {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+.app-header p {
+  font-size: 12px;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+}
+
+/* TABS */
+.tabs {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  padding: 0 32px;
+}
+.tab {
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: 'DM Sans', sans-serif;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* MAIN */
+.main { max-width: 1100px; margin: 0 auto; padding: 28px 32px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* MESSAGES */
+.msg {
+  padding: 11px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  border-left: 3px solid;
+}
+.msg-success { background: var(--green-bg); color: var(--green); border-color: var(--green); }
+.msg-error   { background: var(--red-bg);   color: var(--red);   border-color: var(--red);   }
+.msg-info    { background: var(--blue-bg);  color: var(--blue);  border-color: var(--blue);  }
+#msg-area { min-height: 0; }
+
+/* CONFIRM BAR */
+.confirm-bar {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--red-bg);
+  border: 1px solid #E8C0C0;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--red);
+}
+.confirm-bar.visible { display: flex; }
+.confirm-bar span { flex: 1; }
+
+/* TEXTAREA */
+textarea {
+  width: 100%;
+  font-family: 'DM Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: white;
+  color: var(--text);
+  resize: vertical;
+}
+textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(61,107,42,0.08); }
+
+/* BUTTONS */
+.btn {
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  background: white;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn:hover { background: var(--bg2); border-color: var(--border2); }
+.btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn-primary:hover { background: #333; }
+.btn-danger { color: var(--red); border-color: #E8C0C0; padding: 4px 12px; font-size: 12px; }
+.btn-danger:hover { background: var(--red-bg); }
+.btn-confirm { background: var(--red); color: white; border-color: var(--red); }
+.btn-confirm:hover { background: #9A2F2F; }
+.btn-group { display: flex; gap: 10px; margin-top: 14px; }
+
+/* PREVIEW CARD */
+.preview-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 16px;
+}
+.preview-card h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.pitem {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+.pitem .pl { font-size: 11px; color: var(--text3); margin-bottom: 3px; font-family: 'DM Mono', monospace; }
+.pitem .pv { font-size: 15px; font-weight: 600; }
+.info-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+.info-block .info-lbl { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.info-block .info-txt { font-size: 12.5px; font-family: 'DM Mono', monospace; color: var(--text2); line-height: 1.8; }
+
+/* TABLE */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { background: var(--bg2); }
+th { padding: 10px 12px; font-weight: 600; font-size: 11.5px; color: var(--text2); text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; font-family: 'DM Mono', monospace; letter-spacing: 0.03em; text-transform: uppercase; }
+td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tbody tr:hover td { background: var(--bg2); }
+.num { text-align: right; font-family: 'DM Mono', monospace; }
+.group-row td { background: var(--bg3); font-size: 11px; font-weight: 600; color: var(--text2); padding: 6px 12px; letter-spacing: 0.05em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
+.total-row td { font-weight: 600; border-top: 2px solid var(--border2); background: var(--bg2); }
+.empty { text-align: center; padding: 40px; color: var(--text3); font-size: 13px; }
+
+/* BADGES */
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
+.b-wyatt { background: var(--blue-bg); color: var(--blue); }
+.b-wills { background: var(--green-bg); color: var(--green); }
+.lote-tag { background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 11px; font-family: 'DM Mono', monospace; white-space: nowrap; }
+
+/* METRICS */
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+.metric { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
+.metric .mlbl { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.metric .mval { font-size: 26px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--text); }
+.metric .msub { font-size: 11px; color: var(--text3); margin-top: 3px; }
+
+/* SECTION TITLE */
+.sec-title { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
+
+.hist-total { text-align: right; font-size: 12px; color: var(--text2); margin-top: 10px; font-family: 'DM Mono', monospace; }
+
+@media (max-width: 700px) {
+  .main { padding: 16px; }
+  .app-header { padding: 14px 16px; }
+  .tabs { padding: 0 16px; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .preview-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* EMPAQUE FORM */
+.emp-section-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.emp-form { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.04em; }
+.form-group input, .form-group select { font-size: 13px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: white; color: var(--text); font-family: 'DM Sans', sans-serif; }
+.form-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(61,107,42,0.08); }
+.num-input { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; background: white; color: var(--text); font-family: 'DM Mono', monospace; text-align: right; }
+.num-input:focus { outline: none; border-color: var(--accent); }
+.emp-table td { padding: 6px 12px; }
+.emp-table input { width: 120px; }
+.diff-highlight { color: var(--red); font-weight:600; }
+.diff-item { border-color: var(--red) !important; background: var(--red-bg) !important; }
+
+/* UPLOAD AREA */
+.upload-area {
+  border: 2px dashed var(--border2);
+  border-radius: 10px;
+  padding: 48px 32px;
+  text-align: center;
+  cursor: pointer;
+  background: white;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 16px;
+}
+.upload-area:hover, .upload-area.drag-over {
+  border-color: var(--accent);
+  background: var(--green-bg);
+}
+.upload-icon { font-size: 36px; margin-bottom: 10px; }
+.upload-txt { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.upload-sub { font-size: 12px; color: var(--text3); }
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app-header">
+  <h1>CAT — COSECHA DE EJOTE 2026</h1>
+  <p>Ventana: 1 al 31 de mayo 2026</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('captura',this)">Captura Cosecha</button>
+  <button class="tab" onclick="showTab('historial',this)">Historial Cosecha</button>
+  <button class="tab" onclick="showTab('resumen',this)">Resumen Cosecha</button>
+  <button class="tab" onclick="showTab('empaque',this)">Captura Empaque</button>
+  <button class="tab" onclick="showTab('hist-empaque',this)">Historial Empaque</button>
+  <button class="tab" onclick="showTab('relacion',this)">Relación Cosecha Empaque</button>
+</div>
+
+<div class="main">
+  <div id="msg-area"></div>
+  <div class="confirm-bar" id="confirm-bar">
+    <span id="confirm-txt"></span>
+    <button class="btn btn-confirm" onclick="confirmarEliminar()">Sí, eliminar</button>
+    <button class="btn" onclick="cancelarEliminar()">Cancelar</button>
+  </div>
+
+  <!-- CAPTURA -->
+  <div id="sec-captura" class="section active">
+    <p class="sec-title">Pega el mensaje del grupo de WhatsApp y presiona <strong>Leer mensaje</strong>.</p>
+    <textarea id="wa-input" rows="12" placeholder="Fecha: 02-mayo
+Lote: Los Suarez
+Sección: Las 34
+Tabla: 1 y 2
+Variedad: Wyatt
+Cubetas: 13,409
+Hectáreas: 5
+Corte: Primero
+Producción
+335 bins + 9 cubetas
+2,681 cubetas por hectárea"></textarea>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="parsearMensaje()">Leer mensaje</button>
+      <button class="btn" onclick="limpiarCaptura()">Limpiar</button>
+    </div>
+    <div id="preview-area"></div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div id="sec-historial" class="section">
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Fecha</th><th>Lote</th><th>Sección</th><th>Tabla</th><th>Variedad</th><th>Corte</th>
+          <th class="num">Cubetas</th><th class="num">Ha</th><th class="num">Cub/Ha</th><th></th>
+        </tr></thead>
+        <tbody id="tbody-hist"></tbody>
+      </table>
+    </div>
+    <div class="hist-total" id="hist-total"></div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div id="sec-resumen" class="section">
+    <div class="metrics" id="metrics-area"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Lote</th><th>Sección</th><th>Tabla</th>
+          <th class="num">Cortes</th><th class="num">Total cubetas</th><th class="num">Prom. cub/ha</th><th>Variedad</th>
+        </tr></thead>
+        <tbody id="tbody-resumen"></tbody>
+      </table>
+    </div>
+  </div>
+  <!-- CAPTURA EMPAQUE -->
+  <div id="sec-empaque" class="section">
+    <p class="sec-title">Sube el archivo Excel del reporte diario de empaque. Los datos se extraen automáticamente.</p>
+
+    <div class="upload-area" id="upload-area" onclick="document.getElementById('xlsx-input').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="onDrop(event)">
+      <div class="upload-icon">📂</div>
+      <div class="upload-txt">Haz clic o arrastra el archivo Excel aquí</div>
+      <div class="upload-sub">Archivos .xlsx del reporte de producción CAT</div>
+      <input type="file" id="xlsx-input" accept=".xlsx" style="display:none" onchange="leerExcel(this.files[0])">
+    </div>
+
+    <div id="emp-preview-area"></div>
+  </div>
+
+  <!-- HISTORIAL EMPAQUE -->
+  <div id="sec-hist-empaque" class="section">
+    <div id="emp-metrics-area"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Fecha</th>
+          <th class="num">Cajas Conv.</th><th class="num">Cajas Org.</th><th class="num">Cajas Rep.</th><th class="num">Total Cajas</th>
+          <th class="num">Cub. Pasadas</th><th class="num">Piso Bins</th>
+          <th class="num">Rel. Reporte</th><th class="num">Rel. Calc.</th>
+          <th class="num">LB Proc.</th><th class="num">LB Emp.</th><th class="num">LB Merma</th><th class="num">% Merma</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="tbody-emp-hist"></tbody>
+      </table>
+    </div>
+    <div class="hist-total" id="emp-hist-total"></div>
+  </div>
+
+  <!-- RELACIÓN COSECHA EMPAQUE -->
+  <div id="sec-relacion" class="section">
+    <div id="rel-metrics-area" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px"></div>
+    <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:20px">
+      <canvas id="rel-chart" height="100"></canvas>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Fecha</th>
+          <th class="num">Cub. Cosechadas</th>
+          <th class="num">Cub. Pasadas Empaque</th>
+          <th class="num">Diferencia</th>
+          <th class="num">% Pasado</th>
+        </tr></thead>
+        <tbody id="tbody-relacion"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ==================== GOOGLE SHEETS CONFIG ====================
+const SHEET_ID = '1pYAdu1MNLs-_qN0fGDJzffn16kEzcOG2BvNtXnYLBnQ';
+const CLIENT_EMAIL = 'cat-app@cat-2026-495619.iam.gserviceaccount.com';
+const PRIVATE_KEY = `-----BEGIN PRIVATE KEY-----
+MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDcmnfZZyX+tflZ
+ATp6295zuu1DQVqjtNGh786WYfKa5hvOb2vH9aBrK5gfnAfIOpFrGcbnwkHzU9EJ
+h1esOlYQUAEivvBDcZxo/s/bad/8HwFI4tWfgcayWXH95r+xtGJqqsdWdQkj8JYK
+exxbcDobegkKVl4N1WEkqArcpveGdQVxx/kl81AVkvdnw08C75SixxfsJPLhdWXs
+CuXcH9sI2aXpGYU2Vjav53HSEKNN2bI8t+5FtDO98+y0xYnl4l84BIRxjm5xXSPS
+oRR9CLiOAPSTwTStRahocVtpfG7BDQGqRlwpadwolxkOxfIhVNSErvXyDZvWdkUb
+jKmMOnbPAgMBAAECggEAN00t0D0wZCrgKDTLoTLvEBoDEoIWo8VXa/3+zuoc9EHN
+JLH/1e+4WEVkbEAkH0i3XZ7nov+qosIXPAlGrDEvlAVKU5iECJQ5foSqPLnM4Zow
+K0JaBRN2aQ1NKzYmRfkPVuga8oyCTxUnt9bm4/E9T9gG3iWKjHM6WAMcPfZJRNYn
+qgn6gVQkvtxpszDpyfOcuwP2w48ARDBpEPtQ3tZeOwpzbZ3FciZLyuZYjm/GnJoy
+NjDwCh40lKxZoTemYS6RD0QNYZVWY7aT9sw3Oj/M+NkAy0HrIs2DXR44tlgt4buV
+6GMtgwQQ0ettdvzniqk1cJXhIyDz2WsuoIE6RYsrMQKBgQD+k7oGBtFnANAZbwYj
+9qoKPjofvr3Je/aDFktL7GW1gufRr2OFoltVl+cdLgaJjWpQIwyHs2aL20BZl62b
+COqoc78WDb0mJRdo/QFbESkm6aTPdzRxlkYOTzybwx9BtNm2NaQaBnFZ+qfooW8B
+s+uzNDbcOwUEqG4eXVuIguFjdwKBgQDd1iDzlZQIip9csTkADwn9iRSBwpM3HxWv
+yBOvaASc5GC0Y9OWhimgdKqfFJGmQCJc/7UO28EH96Ei3b9awccMBP94/dIf0Ijc
+7CcqFstHBjttjJMlB0AUGOafQt+QdqaT1dmPp7DhMy6CXhA0C5rl6w4hVaS1fzru
+2r2jIsltaQKBgQDCQEimhpdMCFPBxHSkBnhTHo5NYMcCMeO0vNMxmK03Ji7rUfAX
+rP4SPrlsC42TceOYSFYsSZjKyL6+Xj1q2g/r/33kPxGARLcrNjrNmTeUaJ2IbMYI
+kgjcrFtr4yQ7h9rD7QRNk3L0nI14tY21d+s2r3XY7/PxTO/RnZzVekCvGwKBgQCc
+dd1Rz+rTx2m0x65LM1A5iMh06NZKJ1t1Wmk/6t5uBcmLEWl3nfKYIBEDGE/N8SgL
+bbK24xmXU/lLjRjcmxWXjaLeJC9ijwMoxkqtLdx7oJKjpmVV1XJFenaWV2U1D+pX
+FJpY7s4bV6zy+AL3okPC6/FQY4ZDGJRpSNA90lg9GQKBgQDfRytYJvKf0BOa1Ns4
+tQ7mjpi9glEXNSE5YtHwEQBbIwuoSo4aY8qVXQi6iFgDXlBCLWTRqCmTeqR5mUHx
+o3BcONLhQJShm2Qe77hAOu6n2+Yu6d1YXinym52ZyKDzUmXbuVriUVOF/hZom58E
+KcPQRpBgsXv56tprVVaPKtFVSA==
+-----END PRIVATE KEY-----`;
+const SHEET_COSECHA = 'Cosecha';
+const SHEET_EMPAQUE = 'Empaque';
+
+let registros = [];
+let pendiente = null;
+let idAEliminar = null;
+let gToken = null;
+let gTokenExpiry = 0;
+
+// JWT / token generation using SubtleCrypto
+async function getToken() {
+  if (gToken && Date.now() < gTokenExpiry) return gToken;
+  const now = Math.floor(Date.now() / 1000);
+  const header = btoa(JSON.stringify({alg:'RS256',typ:'JWT'})).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+  const claim = btoa(JSON.stringify({
+    iss: CLIENT_EMAIL,
+    scope: 'https://www.googleapis.com/auth/spreadsheets',
+    aud: 'https://oauth2.googleapis.com/token',
+    exp: now + 3600,
+    iat: now
+  })).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+
+  const unsigned = header + '.' + claim;
+  const keyData = PRIVATE_KEY.replace(/-----BEGIN PRIVATE KEY-----|-----END PRIVATE KEY-----/g,'').replace(/\n/g,'').trim();
+  const binaryKey = Uint8Array.from(atob(keyData), c => c.charCodeAt(0));
+  const cryptoKey = await crypto.subtle.importKey('pkcs8', binaryKey, {name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'}, false, ['sign']);
+  const signature = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', cryptoKey, new TextEncoder().encode(unsigned));
+  const sig = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+  const jwt = unsigned + '.' + sig;
+
+  const resp = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
+  });
+  const data = await resp.json();
+  gToken = data.access_token;
+  gTokenExpiry = Date.now() + 3500000;
+  return gToken;
+}
+
+async function sheetsGet(sheet) {
+  const token = await getToken();
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${sheet}`;
+  const resp = await fetch(url, {headers: {Authorization: `Bearer ${token}`}});
+  const data = await resp.json();
+  return data.values || [];
+}
+
+async function sheetsAppend(sheet, row) {
+  const token = await getToken();
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${sheet}!A1:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
+  await fetch(url, {
+    method: 'POST',
+    headers: {Authorization: `Bearer ${token}`, 'Content-Type':'application/json'},
+    body: JSON.stringify({values: [row]})
+  });
+}
+
+async function sheetsDeleteRow(sheet, rowIndex) {
+  const token = await getToken();
+  // Get sheet metadata to find sheetId
+  const metaResp = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`, {headers: {Authorization: `Bearer ${token}`}});
+  const meta = await metaResp.json();
+  const sheetMeta = meta.sheets.find(s => s.properties.title === sheet);
+  if (!sheetMeta) return;
+  const sheetGid = sheetMeta.properties.sheetId;
+
+  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`, {
+    method: 'POST',
+    headers: {Authorization: `Bearer ${token}`, 'Content-Type':'application/json'},
+    body: JSON.stringify({requests: [{deleteDimension: {range: {sheetId: sheetGid, dimension:'ROWS', startIndex: rowIndex, endIndex: rowIndex+1}}}]})
+  });
+}
+
+// Parse rows from sheet into objects
+function parsesCosecha(rows) {
+  return rows.slice(1).map((r,i) => ({
+    _row: i+2, id: r[0], fecha: r[1], lote: r[2], seccion: r[3], tabla: r[4],
+    variedad: r[5], corte: r[6], cubetas: parseFloat(r[7])||0,
+    ha: parseFloat(r[8])||0, cubPorHa: parseFloat(r[9])||0, infoRaw: r[10]||''
+  }));
+}
+
+function parsesEmpaque(rows) {
+  return rows.slice(1).map((r,i) => ({
+    _row: i+2, id: parseFloat(r[0]), fechaISO: r[1],
+    orgCajas: parseFloat(r[2])||0, orgLbs: parseFloat(r[3])||0,
+    convCajas: parseFloat(r[4])||0, convLbs: parseFloat(r[5])||0,
+    repCajas: parseFloat(r[6])||0, repLbs: parseFloat(r[7])||0,
+    totCajas: parseFloat(r[8])||0, totLbs: parseFloat(r[9])||0,
+    cubetas: parseFloat(r[10])||0, pisosBins: parseFloat(r[11])||0,
+    relRep: parseFloat(r[12])||0, relAcum: parseFloat(r[13])||0,
+    relCalc: parseFloat(r[14])||0,
+    lbProc: parseFloat(r[15])||0, lbEmp: parseFloat(r[16])||0,
+    lbMerma: parseFloat(r[17])||0, lbMermaCalc: parseFloat(r[18])||0,
+    pctMerma: parseFloat(r[19])||0,
+    cubAcum: parseFloat(r[20])||0, acum2026: parseFloat(r[21])||0
+  }));
+}
+
+async function load() {
+  showMsg('Cargando datos...', 'info');
+  try {
+    const [rc, re] = await Promise.all([sheetsGet(SHEET_COSECHA), sheetsGet(SHEET_EMPAQUE)]);
+    if (rc.length <= 1) registros = [];
+    else registros = parsesCosecha(rc);
+    if (re.length <= 1) empRegistros = [];
+    else empRegistros = parsesEmpaque(re);
+    showMsg('Datos cargados correctamente.');
+  } catch(e) {
+    showMsg('Error al cargar datos: ' + e.message, 'error');
+  }
+}
+
+async function save(reg) {
+  // Append one cosecha row to sheet
+  const r = reg;
+  await sheetsAppend(SHEET_COSECHA, [r.id, r.fecha, r.lote, r.seccion, r.tabla, r.variedad, r.corte, r.cubetas, r.ha, r.cubPorHa, r.infoRaw||'']);
+}
+
+async function saveEmpRow(r) {
+  await sheetsAppend(SHEET_EMPAQUE, [r.id, r.fechaISO, r.orgCajas, r.orgLbs, r.convCajas, r.convLbs, r.repCajas, r.repLbs, r.totCajas, r.totLbs, r.cubetas, r.pisosBins, r.relRep, r.relAcum, r.relCalc, r.lbProc, r.lbEmp, r.lbMerma, r.lbMermaCalc, r.pctMerma, r.cubAcum, r.acum2026]);
+}
+
+function showMsg(txt, type='success') {
+  const el = document.getElementById('msg-area');
+  el.innerHTML = `<div class="msg msg-${type}">${txt}</div>`;
+  setTimeout(() => el.innerHTML = '', 4000);
+}
+
+function showTab(t, btn) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sec-' + t).classList.add('active');
+  cancelarEliminar();
+  if (t === 'historial') renderHistorial();
+  if (t === 'resumen') renderResumen();
+  if (t === 'hist-empaque') renderEmpHist();
+  if (t === 'relacion') renderRelacion();
+}
+
+function getVal(text, key) {
+  const rx = new RegExp(key + '[:\\s]+(.+)', 'i');
+  const m = text.match(rx);
+  return m ? m[1].trim() : '';
+}
+
+function parsearMensaje() {
+  const txt = document.getElementById('wa-input').value;
+  if (!txt.trim()) { showMsg('Pega un mensaje primero.', 'error'); return; }
+
+  const prodIdx = txt.search(/^Producción/im);
+  const enc = prodIdx >= 0 ? txt.slice(0, prodIdx) : txt;
+  const infoRaw = prodIdx >= 0 ? txt.slice(prodIdx).trim() : '';
+
+  const fecha     = getVal(enc, 'Fecha');
+  const lote      = getVal(enc, 'Lote');
+  const seccion   = getVal(enc, 'Secci[oó]n');
+  const tabla     = getVal(enc, 'Tabla');
+  const variedad  = getVal(enc, 'Variedad');
+  const cubetasRaw= getVal(enc, 'Cubetas');
+  const haRaw     = getVal(enc, 'Hect[aá]reas');
+  const corte     = getVal(enc, 'Corte');
+
+  const cubetas = parseInt(cubetasRaw.replace(/,/g, '')) || 0;
+  const ha = parseFloat(haRaw) || 0;
+  const cubPorHa = ha > 0 ? Math.round(cubetas / ha) : 0;
+
+  const meses = {enero:'01',febrero:'02',marzo:'03',abril:'04',mayo:'05',junio:'06',julio:'07',agosto:'08',septiembre:'09',octubre:'10',noviembre:'11',diciembre:'12'};
+  let fechaISO = fecha;
+  const fMatch = fecha.match(/(\d+)[\/\-\s](\w+)/i);
+  if (fMatch) { const mes = meses[fMatch[2].toLowerCase()] || '05'; fechaISO = `2026-${mes}-${fMatch[1].padStart(2,'0')}`; }
+
+  if (!fecha || !lote || !seccion || !tabla || cubetas === 0) {
+    showMsg('No se pudo leer el mensaje. Verifica el formato.', 'error'); return;
+  }
+
+  pendiente = { fecha: fechaISO, lote, seccion, tabla, variedad, corte, cubetas, ha, cubPorHa, infoRaw };
+  mostrarPreview(pendiente);
+}
+
+function mostrarPreview(p) {
+  const fF = f => { const [y,m,d] = f.split('-'); return `${d}/${m}/${y}`; };
+  const infoHtml = p.infoRaw
+    ? `<div class="info-block"><div class="info-lbl">Producción (informativo)</div><div class="info-txt">${p.infoRaw.replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div></div>`
+    : '';
+  document.getElementById('preview-area').innerHTML = `
+    <div class="preview-card">
+      <h3>Vista previa — confirma antes de guardar</h3>
+      <div class="preview-grid">
+        <div class="pitem"><div class="pl">Fecha</div><div class="pv">${fF(p.fecha)}</div></div>
+        <div class="pitem"><div class="pl">Lote</div><div class="pv">${p.lote}</div></div>
+        <div class="pitem"><div class="pl">Sección</div><div class="pv">${p.seccion}</div></div>
+        <div class="pitem"><div class="pl">Tabla</div><div class="pv">${p.tabla}</div></div>
+        <div class="pitem"><div class="pl">Variedad</div><div class="pv">${p.variedad||'—'}</div></div>
+        <div class="pitem"><div class="pl">Corte</div><div class="pv">${p.corte||'—'}</div></div>
+        <div class="pitem"><div class="pl">Cubetas</div><div class="pv">${p.cubetas.toLocaleString()}</div></div>
+        <div class="pitem"><div class="pl">Hectáreas</div><div class="pv">${p.ha}</div></div>
+        <div class="pitem"><div class="pl">Cub/Ha (÷ fórmula)</div><div class="pv">${p.cubPorHa.toLocaleString()}</div></div>
+      </div>
+      ${infoHtml}
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="confirmarGuardado()">Confirmar y guardar</button>
+        <button class="btn" onclick="document.getElementById('preview-area').innerHTML='';pendiente=null">Cancelar</button>
+      </div>
+    </div>`;
+}
+
+async function confirmarGuardado() {
+  if (!pendiente) return;
+  pendiente.id = Date.now();
+  showMsg('Guardando...', 'info');
+  try {
+    await save(pendiente);
+    registros.push(pendiente);
+    showMsg(`Guardado: ${pendiente.lote} / ${pendiente.seccion} / Tabla ${pendiente.tabla} — ${pendiente.cubetas.toLocaleString()} cubetas`);
+  } catch(e) { showMsg('Error al guardar: ' + e.message, 'error'); return; }
+  pendiente = null;
+  limpiarCaptura();
+}
+
+function limpiarCaptura() {
+  document.getElementById('wa-input').value = '';
+  document.getElementById('preview-area').innerHTML = '';
+}
+
+function fmtF(f) { if (!f) return ''; const [y,m,d] = f.split('-'); return `${d}/${m}/${y}`; }
+
+function pedirEliminar(id) {
+  const r = registros.find(x => x.id === id);
+  if (!r) return;
+  idAEliminar = id;
+  document.getElementById('confirm-txt').textContent = `¿Eliminar: ${r.lote} / ${r.seccion} / Tabla ${r.tabla} — ${fmtF(r.fecha)}?`;
+  document.getElementById('confirm-bar').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function confirmarEliminar() {
+  if (idAEliminar) {
+    const r = registros.find(x => x.id === idAEliminar);
+    showMsg('Eliminando...', 'info');
+    try {
+      if (r && r._row) await sheetsDeleteRow(SHEET_COSECHA, r._row - 1);
+      registros = registros.filter(r => r.id !== idAEliminar);
+    } catch(e) { showMsg('Error al eliminar: ' + e.message, 'error'); return; }
+    idAEliminar = null;
+    document.getElementById('confirm-bar').classList.remove('visible');
+    renderHistorial(); renderResumen();
+    showMsg('Registro eliminado.');
+  } else if (empIdAEliminar) {
+    const r = empRegistros.find(x => x.id === empIdAEliminar);
+    showMsg('Eliminando...', 'info');
+    try {
+      if (r && r._row) await sheetsDeleteRow(SHEET_EMPAQUE, r._row - 1);
+      empRegistros = empRegistros.filter(r => r.id !== empIdAEliminar);
+    } catch(e) { showMsg('Error al eliminar: ' + e.message, 'error'); return; }
+    empIdAEliminar = null;
+    document.getElementById('confirm-bar').classList.remove('visible');
+    renderEmpHist();
+    showMsg('Registro de empaque eliminado.');
+  }
+}
+
+function cancelarEliminar() {
+  idAEliminar = null;
+  empIdAEliminar = null;
+  document.getElementById('confirm-bar').classList.remove('visible');
+}
+
+function renderHistorial() {
+  const data = [...registros].sort((a,b) => b.fecha.localeCompare(a.fecha));
+  const tb = document.getElementById('tbody-hist');
+  if (!data.length) {
+    tb.innerHTML = `<tr><td colspan="10" class="empty">Sin registros todavía</td></tr>`;
+    document.getElementById('hist-total').textContent = '';
+    return;
+  }
+  tb.innerHTML = data.map(r => `<tr>
+    <td>${fmtF(r.fecha)}</td>
+    <td><span class="lote-tag">${r.lote}</span></td>
+    <td>${r.seccion}</td>
+    <td>Tabla ${r.tabla}</td>
+    <td><span class="badge b-${(r.variedad||'').toLowerCase()}">${r.variedad||'—'}</span></td>
+    <td>${r.corte||'—'}</td>
+    <td class="num">${r.cubetas.toLocaleString()}</td>
+    <td class="num">${r.ha||'—'}</td>
+    <td class="num">${r.cubPorHa ? r.cubPorHa.toLocaleString() : '—'}</td>
+    <td><button class="btn btn-danger" data-id="${r.id}">Eliminar</button></td>
+  </tr>`).join('');
+  document.getElementById('hist-total').textContent = `Total acumulado: ${data.reduce((s,r) => s+r.cubetas, 0).toLocaleString()} cubetas`;
+
+  document.querySelectorAll('#tbody-hist .btn-danger').forEach(btn => {
+    btn.addEventListener('click', () => pedirEliminar(Number(btn.dataset.id)));
+  });
+}
+
+function renderResumen() {
+  const totCub  = registros.reduce((s,r) => s+r.cubetas, 0);
+  const dias    = [...new Set(registros.map(r => r.fecha))].length;
+  const lotes   = [...new Set(registros.map(r => r.lote))].length;
+  const promG   = registros.length > 0 ? Math.round(registros.reduce((s,r) => s+(r.cubPorHa||0), 0) / registros.length) : 0;
+
+  document.getElementById('metrics-area').innerHTML = `
+    <div class="metric"><div class="mlbl">Total cubetas</div><div class="mval">${totCub.toLocaleString()}</div><div class="msub">acumulado mayo</div></div>
+    <div class="metric"><div class="mlbl">Prom. cub/ha</div><div class="mval">${promG.toLocaleString()}</div><div class="msub">promedio general</div></div>
+    <div class="metric"><div class="mlbl">Días registrados</div><div class="mval">${dias}</div><div class="msub">de 31 posibles</div></div>
+    <div class="metric"><div class="mlbl">Lotes activos</div><div class="mval">${lotes}</div><div class="msub">en historial</div></div>`;
+
+  // Orden de cortes por nombre
+  const corteOrdinal = { 'primero':1,'segundo':2,'tercero':3,'cuarto':4,'quinto':5,'sexto':6,'séptimo':7,'octavo':8,'noveno':9,'décimo':10 };
+
+  const grupos = {};
+  registros.forEach(r => {
+    const k = `${r.lote}||${r.seccion}||${r.tabla}`;
+    if (!grupos[k]) grupos[k] = { lote:r.lote, seccion:r.seccion, tabla:r.tabla, variedad:r.variedad, maxCorte:0, cubetas:0, totalCub:0, totalHa:0 };
+    // Determinar el número ordinal de este corte
+    const corteNom = (r.corte||'').toLowerCase().trim();
+    const num = corteOrdinal[corteNom] || 0;
+    if (num > grupos[k].maxCorte) grupos[k].maxCorte = num;
+    grupos[k].cubetas += r.cubetas;
+    grupos[k].totalCub += r.cubetas;
+    grupos[k].totalHa += (r.ha||0);
+  });
+
+  const rows = Object.values(grupos).sort((a,b) => a.lote.localeCompare(b.lote) || a.seccion.localeCompare(b.seccion));
+  const loteGroups = {};
+  rows.forEach(r => { if (!loteGroups[r.lote]) loteGroups[r.lote] = []; loteGroups[r.lote].push(r); });
+
+  let html = '';
+  Object.entries(loteGroups).forEach(([lote, items]) => {
+    html += `<tr class="group-row"><td colspan="7">${lote}</td></tr>`;
+    items.forEach(r => {
+      const prom = r.totalHa > 0 ? Math.round(r.totalCub / r.totalHa) : 0;
+      html += `<tr>
+        <td></td><td>${r.seccion}</td><td>Tabla ${r.tabla}</td>
+        <td class="num">${r.maxCorte > 0 ? r.maxCorte : '—'}</td>
+        <td class="num">${r.cubetas.toLocaleString()}</td>
+        <td class="num">${prom ? prom.toLocaleString() : '—'}</td>
+        <td><span class="badge b-${(r.variedad||'').toLowerCase()}">${r.variedad||'—'}</span></td>
+      </tr>`;
+    });
+    const totL = items.reduce((s,i) => s+i.cubetas, 0);
+    html += `<tr class="total-row"><td colspan="5" style="font-size:12px;color:var(--text2)">Total ${lote}</td><td class="num">${totL.toLocaleString()}</td><td></td></tr>`;
+  });
+
+  if (!html) html = `<tr><td colspan="7" class="empty">Sin registros todavía</td></tr>`;
+  document.getElementById('tbody-resumen').innerHTML = html;
+}
+
+
+// ==================== EMPAQUE ====================
+// SK_EMP replaced by Google Sheets
+let empRegistros = [];
+let empIdAEliminar = null;
+let empPendiente = null;
+
+function loadEmpaque() { /* handled by load() */ }
+function saveEmpaque() {
+  try { localStorage.setItem(SK_EMP, JSON.stringify(empRegistros)); } catch(e) {}
+}
+
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-area').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) leerExcel(file);
+}
+
+function leerExcel(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null });
+      parsearExcelEmpaque(rows, file.name);
+    } catch(err) {
+      showMsg('Error al leer el archivo. Verifica que sea el formato correcto.', 'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parsearExcelEmpaque(rows, filename) {
+  // Mapa exacto del Excel:
+  // Fila 0:  [PRODUCCIÓN EJOTE CAT, -, -, -, -, FECHA]
+  // Fila 1:  headers
+  // Fila 2:  PT-0002 Organico    col3=cajas  col4=lbs
+  // Fila 3:  PT-0001 Convencional col3=cajas col4=lbs
+  // Fila 4:  REPROCESO           col3=cajas  col4=lbs
+  // Fila 5:  PRODUCCIÓN TOTAL    col3=cajas  col4=lbs
+  // Fila 7:  RELACIÓN DEL DIA                col5=valor
+  // Fila 8:  RELACIÓN ACUMULADA              col5=valor
+  // Fila 10: Piso bins   col2=valor | Relación LB campo...
+  // Fila 11: Cubetas recibidas col2=valor | LB Procesadas col4=valor
+  // Fila 12: Cubetas acumuladas col2=valor | LB Empacadas col4=valor
+  // Fila 13:                               | LB Merma     col4=valor
+  // Fila 15: ACUMULADO 2026                  col5=valor
+
+  try {
+    const n = v => (v === null || v === undefined || v === '-' || v === '') ? 0 : parseFloat(String(v).replace(/,/g,'')) || 0;
+
+    // Fecha
+    let fechaRaw = rows[0]?.[5] ?? null;
+    let fechaISO = '';
+    if (fechaRaw) {
+      if (typeof fechaRaw === 'number') {
+        const d = new Date(Math.round((fechaRaw - 25569) * 86400 * 1000));
+        fechaISO = d.toISOString().slice(0,10);
+      } else {
+        const parts = String(fechaRaw).split('/');
+        if (parts.length === 3) fechaISO = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+      }
+    }
+
+    // Producción
+    const orgCajas  = n(rows[2]?.[3]);
+    const orgLbs    = n(rows[2]?.[4]);
+    const convCajas = n(rows[3]?.[3]);
+    const convLbs   = n(rows[3]?.[4]);
+    const repCajas  = n(rows[4]?.[3]);
+    const repLbs    = n(rows[4]?.[4]);
+    const totCajas  = n(rows[5]?.[3]);
+    const totLbs    = n(rows[5]?.[4]);
+
+    // Indicadores del día
+    const relRep  = n(rows[7]?.[5]);   // Fila 7, col 5
+    const relAcum = n(rows[8]?.[5]);   // Fila 8, col 5
+
+    // Cubetas y bins
+    const pisosBins = n(rows[10]?.[2]);  // Fila 10, col 2
+    const cubetas   = n(rows[11]?.[2]);  // Fila 11, col 2
+    const cubAcum   = n(rows[12]?.[2]);  // Fila 12, col 2
+
+    // LB campo a LB empaque
+    const lbProc  = n(rows[11]?.[4]);  // Fila 11, col 4
+    const lbEmp   = n(rows[12]?.[4]);  // Fila 12, col 4
+    const lbMerma = n(rows[13]?.[4]);  // Fila 13, col 4
+
+    // Acumulado
+    const acum2026 = n(rows[15]?.[5]); // Fila 15, col 5
+
+    // Calculados
+    const relCalc     = totCajas > 0 ? parseFloat((cubetas / totCajas).toFixed(2)) : 0;
+    const lbMermaCalc = parseFloat((lbProc - lbEmp).toFixed(2));
+    const pctMerma    = lbProc > 0 ? parseFloat(((lbMermaCalc / lbProc) * 100).toFixed(1)) : 0;
+
+    if (!fechaISO || totCajas === 0) {
+      showMsg('No se encontraron datos válidos. Verifica que sea el archivo correcto.', 'error');
+      return;
+    }
+
+    empPendiente = { fechaISO, orgCajas, orgLbs, convCajas, convLbs, repCajas, repLbs, totCajas, totLbs, cubetas, pisosBins, relRep, relAcum, relCalc, lbProc, lbEmp, lbMerma, lbMermaCalc, pctMerma, cubAcum, acum2026 };
+    mostrarPreviewEmpaque(empPendiente, filename);
+  } catch(err) {
+    showMsg('No se pudieron extraer los datos. Verifica el formato del archivo. ' + err, 'error');
+  }
+}
+
+function mostrarPreviewEmpaque(p, filename) {
+  const fF = f => { if(!f) return '—'; const [y,m,d] = f.split('-'); return `${d}/${m}/${y}`; };
+  const n = v => (v||0).toLocaleString('es-MX', {maximumFractionDigits:2});
+  const relDiff = Math.abs((p.relRep||0) - (p.relCalc||0)) > 0.05;
+
+  document.getElementById('emp-preview-area').innerHTML = `
+    <div class="preview-card">
+      <h3>Vista previa — ${filename}</h3>
+      <div class="emp-section-title">Producción por producto</div>
+      <div class="table-wrap" style="margin-bottom:14px">
+        <table class="emp-table">
+          <thead><tr><th>Código</th><th>Descripción</th><th class="num">Cajas</th><th class="num">Libras Totales</th></tr></thead>
+          <tbody>
+            <tr><td>PT-0002</td><td>Ejote Orgánico 30 lb</td><td class="num">${n(p.orgCajas)}</td><td class="num">${n(p.orgLbs)}</td></tr>
+            <tr><td>PT-0001</td><td>Ejote Convencional 30 lb</td><td class="num">${n(p.convCajas)}</td><td class="num">${n(p.convLbs)}</td></tr>
+            <tr><td>—</td><td>Reproceso</td><td class="num">${n(p.repCajas)}</td><td class="num">${n(p.repLbs)}</td></tr>
+            <tr class="total-row"><td colspan="2"><strong>Total</strong></td><td class="num">${n(p.totCajas)}</td><td class="num">${n(p.totLbs)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="emp-section-title">Indicadores del día</div>
+      <div class="preview-grid" style="grid-template-columns:1fr 1fr;margin-bottom:8px">
+        <div class="pitem"><div class="pl">Fecha</div><div class="pv">${fF(p.fechaISO)}</div></div>
+        <div class="pitem"><div class="pl">Piso bins</div><div class="pv">${n(p.pisosBins)} <span style="font-size:12px;color:var(--text3)">${(p.pisosBins*40).toLocaleString('es-MX')} cub.</span></div></div>
+      </div>
+      <div class="preview-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:8px">
+        <div class="pitem"><div class="pl">Cubetas pasadas</div><div class="pv">${n(p.cubetas)}</div></div>
+        <div class="pitem"><div class="pl">Cajas empacadas</div><div class="pv">${n(p.totCajas)}</div></div>
+        <div class="pitem ${relDiff ? 'diff-item' : ''}"><div class="pl">Relación calculada</div><div class="pv ${relDiff ? 'diff-highlight' : ''}">${p.relCalc}${relDiff ? ' ⚠️ (rep: '+p.relRep+')' : ''}</div></div>
+      </div>
+      <div class="preview-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+        <div class="pitem"><div class="pl">LB Procesadas</div><div class="pv">${n(p.lbProc)} <span style="font-size:12px;color:var(--text3)">100%</span></div></div>
+        <div class="pitem"><div class="pl">LB Empacadas</div><div class="pv">${n(p.lbEmp)} <span style="font-size:12px;color:var(--text3)">${p.lbProc > 0 ? ((p.lbEmp/p.lbProc)*100).toFixed(0)+'%' : '—'}</span></div></div>
+        <div class="pitem"><div class="pl">LB Merma</div><div class="pv">${n(p.lbMermaCalc)} <span style="font-size:12px;color:var(--red)">${p.pctMerma}%</span></div></div>
+      </div>
+      <div class="emp-section-title">Acumulados temporada (del reporte)</div>
+      <div class="preview-grid" style="margin-bottom:14px">
+        <div class="pitem"><div class="pl">Cubetas acumuladas</div><div class="pv">${n(p.cubAcum)}</div></div>
+        <div class="pitem"><div class="pl">Relación acumulada</div><div class="pv">${p.relAcum}</div></div>
+        <div class="pitem"><div class="pl">Acumulado 2026 (cajas)</div><div class="pv">${n(p.acum2026)}</div></div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="confirmarGuardadoEmpaque()">Confirmar y guardar</button>
+        <button class="btn" onclick="document.getElementById('emp-preview-area').innerHTML='';empPendiente=null;document.getElementById('xlsx-input').value=''">Cancelar</button>
+      </div>
+    </div>`;
+}
+
+async function confirmarGuardadoEmpaque() {
+  if (!empPendiente) return;
+  const reg = { id: Date.now(), ...empPendiente };
+  showMsg('Guardando...', 'info');
+  try {
+    await saveEmpRow(reg);
+    empRegistros.push(reg);
+    showMsg(`Empaque guardado: ${fmtF(reg.fechaISO)} — ${reg.totCajas.toLocaleString()} cajas`);
+  } catch(e) { showMsg('Error al guardar: ' + e.message, 'error'); return; }
+  empPendiente = null;
+  document.getElementById('emp-preview-area').innerHTML = '';
+  document.getElementById('xlsx-input').value = '';
+}
+
+function pedirEliminarEmpaque(id) {
+  const r = empRegistros.find(x => x.id === id);
+  if (!r) return;
+  empIdAEliminar = id;
+  document.getElementById('confirm-txt').textContent = `¿Eliminar empaque: ${fmtF(r.fechaISO)} — ${r.totCajas.toLocaleString()} cajas?`;
+  document.getElementById('confirm-bar').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderEmpHist() {
+  const data = [...empRegistros].sort((a,b) => b.fechaISO.localeCompare(a.fechaISO));
+  const tb = document.getElementById('tbody-emp-hist');
+
+  const totCajasAcum = data.reduce((s,r) => s + (r.totCajas||0), 0);
+  const totCubAcum   = data.reduce((s,r) => s + (r.cubetas||0), 0);
+  const promMerma    = data.length > 0 ? (data.reduce((s,r) => s + (r.pctMerma||0), 0) / data.length).toFixed(1) : 0;
+  const totLbProc    = data.reduce((s,r) => s + (r.lbProc||0), 0);
+  const totLbEmp     = data.reduce((s,r) => s + (r.lbEmp||0), 0);
+  const totLbMerma   = parseFloat((totLbProc - totLbEmp).toFixed(2));
+  const pctMermaAcum = totLbProc > 0 ? ((totLbMerma / totLbProc) * 100).toFixed(1) : 0;
+
+  const relAcumCalc = totCajasAcum > 0 ? (totCubAcum / totCajasAcum).toFixed(2) : 0;
+
+  document.getElementById('emp-metrics-area').innerHTML = `
+    <div class="metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px">
+      <div class="metric"><div class="mlbl">Cubetas pasadas acum.</div><div class="mval">${totCubAcum.toLocaleString('es-MX',{maximumFractionDigits:1})}</div><div class="msub">temporada</div></div>
+      <div class="metric"><div class="mlbl">Total cajas acum.</div><div class="mval">${totCajasAcum.toLocaleString()}</div><div class="msub">temporada</div></div>
+      <div class="metric"><div class="mlbl">Relación acum.</div><div class="mval">${relAcumCalc}</div><div class="msub">cub. ÷ cajas</div></div>
+    </div>
+    <div class="metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+      <div class="metric"><div class="mlbl">LB Procesadas acum.</div><div class="mval">${totLbProc.toLocaleString('es-MX',{maximumFractionDigits:0})}</div><div class="msub" style="font-weight:600">100%</div></div>
+      <div class="metric"><div class="mlbl">LB Empacadas acum.</div><div class="mval">${totLbEmp.toLocaleString('es-MX',{maximumFractionDigits:0})}</div><div class="msub" style="font-weight:600">${totLbProc>0?((totLbEmp/totLbProc)*100).toFixed(1)+'%':'0%'}</div></div>
+      <div class="metric"><div class="mlbl">LB Merma acum.</div><div class="mval">${totLbMerma.toLocaleString('es-MX',{maximumFractionDigits:0})}</div><div class="msub" style="font-weight:600;color:var(--red)">${pctMermaAcum}%</div></div>
+    </div>`;
+
+  if (!data.length) {
+    tb.innerHTML = `<tr><td colspan="14" class="empty">Sin registros todavía</td></tr>`;
+    document.getElementById('emp-hist-total').textContent = '';
+    return;
+  }
+
+  const n = v => (v||0).toLocaleString('es-MX', {maximumFractionDigits:2});
+
+  tb.innerHTML = data.map(r => {
+    const relDiff = Math.abs((r.relRep||0) - (r.relCalc||0)) > 0.05;
+    return `<tr>
+      <td>${fmtF(r.fechaISO)}</td>
+      <td class="num">${n(r.convCajas)}</td>
+      <td class="num">${n(r.orgCajas)}</td>
+      <td class="num">${n(r.repCajas)}</td>
+      <td class="num" style="font-weight:600">${n(r.totCajas)}</td>
+      <td class="num">${n(r.cubetas)}</td>
+      <td class="num">${n(r.pisosBins)}</td>
+      <td class="num">${r.relRep||'—'}</td>
+      <td class="num ${relDiff?'diff-highlight':''}">${r.relCalc||'—'}</td>
+      <td class="num">${n(r.lbProc)}</td>
+      <td class="num">${n(r.lbEmp)}</td>
+      <td class="num">${n(r.lbMermaCalc)}</td>
+      <td class="num">${r.pctMerma}%</td>
+      <td><button class="btn btn-danger" data-empid="${r.id}">Eliminar</button></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('emp-hist-total').textContent = `Acumulado: ${totCajasAcum.toLocaleString()} cajas · ${totCubAcum.toLocaleString('es-MX',{maximumFractionDigits:1})} cubetas pasadas`;
+
+  document.querySelectorAll('#tbody-emp-hist .btn-danger').forEach(btn => {
+    btn.addEventListener('click', () => pedirEliminarEmpaque(Number(btn.dataset.empid)));
+  });
+}
+
+
+// ==================== RELACIÓN COSECHA / EMPAQUE ====================
+let relChart = null;
+
+function renderRelacion() {
+  // Agrupar cubetas cosechadas por fecha
+  const cosechaByFecha = {};
+  registros.forEach(r => {
+    if (!cosechaByFecha[r.fecha]) cosechaByFecha[r.fecha] = 0;
+    cosechaByFecha[r.fecha] += (r.cubetas || 0);
+  });
+
+  // Cubetas pasadas en empaque por fecha
+  const empaqueByFecha = {};
+  empRegistros.forEach(r => {
+    if (!empaqueByFecha[r.fechaISO]) empaqueByFecha[r.fechaISO] = 0;
+    empaqueByFecha[r.fechaISO] += (r.cubetas || 0);
+  });
+
+  // Unir fechas
+  const fechas = [...new Set([...Object.keys(cosechaByFecha), ...Object.keys(empaqueByFecha)])].sort();
+
+  // Métricas globales
+  const totCosecha = Object.values(cosechaByFecha).reduce((s,v) => s+v, 0);
+  const totEmpaque = Object.values(empaqueByFecha).reduce((s,v) => s+v, 0);
+  const pctPasado  = totCosecha > 0 ? ((totEmpaque / totCosecha) * 100).toFixed(1) : 0;
+
+  document.getElementById('rel-metrics-area').innerHTML = `
+    <div class="metric"><div class="mlbl">Total cub. cosechadas</div><div class="mval">${totCosecha.toLocaleString('es-MX',{maximumFractionDigits:0})}</div><div class="msub">acumulado temporada</div></div>
+    <div class="metric"><div class="mlbl">Total cub. pasadas empaque</div><div class="mval">${totEmpaque.toLocaleString('es-MX',{maximumFractionDigits:1})}</div><div class="msub">acumulado temporada</div></div>
+    <div class="metric"><div class="mlbl">% Pasado a empaque</div><div class="mval">${pctPasado}%</div><div class="msub">empaque ÷ cosecha</div></div>`;
+
+  // Tabla
+  const tbody = document.getElementById('tbody-relacion');
+  if (!fechas.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty">Sin datos todavía — captura registros de cosecha y empaque</td></tr>`;
+  } else {
+    tbody.innerHTML = fechas.map(f => {
+      const cos = cosechaByFecha[f] || 0;
+      const emp = empaqueByFecha[f] || 0;
+      const diff = emp - cos;
+      const pct  = cos > 0 ? ((emp / cos) * 100).toFixed(1) : '—';
+      const diffColor = diff < 0 ? 'color:var(--red)' : diff > 0 ? 'color:var(--green)' : '';
+      return `<tr>
+        <td>${fmtF(f)}</td>
+        <td class="num">${cos.toLocaleString('es-MX',{maximumFractionDigits:0})}</td>
+        <td class="num">${emp.toLocaleString('es-MX',{maximumFractionDigits:1})}</td>
+        <td class="num" style="${diffColor}">${diff >= 0 ? '+' : ''}${diff.toLocaleString('es-MX',{maximumFractionDigits:1})}</td>
+        <td class="num">${pct !== '—' ? pct + '%' : '—'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Gráfica
+  const labels = fechas.map(f => fmtF(f));
+  const dataCos = fechas.map(f => cosechaByFecha[f] || 0);
+  const dataEmp = fechas.map(f => empaqueByFecha[f] || 0);
+
+  if (relChart) relChart.destroy();
+  const ctx = document.getElementById('rel-chart').getContext('2d');
+  relChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Cubetas cosechadas',
+          data: dataCos,
+          backgroundColor: 'rgba(29,90,42,0.7)',
+          borderColor: '#1D5A2A',
+          borderWidth: 1,
+          borderRadius: 4,
+        },
+        {
+          label: 'Cubetas pasadas empaque',
+          data: dataEmp,
+          backgroundColor: 'rgba(26,58,107,0.7)',
+          borderColor: '#1A3A6B',
+          borderWidth: 1,
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top', labels: { font: { family: 'DM Sans', size: 12 }, boxRadius: 4 } },
+        title: { display: true, text: 'Cubetas cosechadas vs pasadas a empaque por día', font: { family: 'DM Mono', size: 13 }, color: '#6B6458' }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'DM Mono', size: 11 } } },
+        y: { grid: { color: '#E4E0D6' }, ticks: { font: { family: 'DM Mono', size: 11 } } }
+      }
+    }
+  });
+}
+
+// INIT
+async function initApp() {
+  showMsg('Conectando con Google Sheets...', 'info');
+  try {
+    // Ensure header rows exist
+    const rc = await sheetsGet(SHEET_COSECHA);
+    if (!rc.length) {
+      await sheetsAppend(SHEET_COSECHA, ['id','fecha','lote','seccion','tabla','variedad','corte','cubetas','ha','cubPorHa','infoRaw']);
+    }
+    const re = await sheetsGet(SHEET_EMPAQUE);
+    if (!re.length) {
+      await sheetsAppend(SHEET_EMPAQUE, ['id','fechaISO','orgCajas','orgLbs','convCajas','convLbs','repCajas','repLbs','totCajas','totLbs','cubetas','pisosBins','relRep','relAcum','relCalc','lbProc','lbEmp','lbMerma','lbMermaCalc','pctMerma','cubAcum','acum2026']);
+    }
+    await load();
+    renderHistorial();
+    renderResumen();
+  } catch(e) {
+    showMsg('Error de conexión: ' + e.message + '. Verifica tu internet.', 'error');
+  }
+}
+initApp();
+</script>
+</body>
+</html>
