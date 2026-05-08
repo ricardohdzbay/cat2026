@@ -484,9 +484,13 @@ async function sheetsAppend(sheet, row) {
   });
 }
 
-async function sheetsDeleteRow(sheet, rowIndex) {
+async function sheetsDeleteById(sheet, id) {
   const token = await getToken();
-  // Get sheet metadata to find sheetId
+  // Find the actual current row index by searching for the id
+  const rows = await sheetsGet(sheet);
+  const rowIndex = rows.findIndex((r, i) => i > 0 && String(r[0]) === String(id));
+  if (rowIndex === -1) { console.warn('Row not found for id', id); return; }
+
   const metaResp = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`, {headers: {Authorization: `Bearer ${token}`}});
   const meta = await metaResp.json();
   const sheetMeta = meta.sheets.find(s => s.properties.title === sheet);
@@ -669,7 +673,7 @@ async function confirmarEliminar() {
     const r = registros.find(x => x.id === idAEliminar);
     showMsg('Eliminando...', 'info');
     try {
-      if (r && r._row) await sheetsDeleteRow(SHEET_COSECHA, r._row - 1);
+      await sheetsDeleteById(SHEET_COSECHA, idAEliminar);
       registros = registros.filter(r => r.id !== idAEliminar);
     } catch(e) { showMsg('Error al eliminar: ' + e.message, 'error'); return; }
     idAEliminar = null;
@@ -680,7 +684,7 @@ async function confirmarEliminar() {
     const r = empRegistros.find(x => x.id === empIdAEliminar);
     showMsg('Eliminando...', 'info');
     try {
-      if (r && r._row) await sheetsDeleteRow(SHEET_EMPAQUE, r._row - 1);
+      await sheetsDeleteById(SHEET_EMPAQUE, empIdAEliminar);
       empRegistros = empRegistros.filter(r => r.id !== empIdAEliminar);
     } catch(e) { showMsg('Error al eliminar: ' + e.message, 'error'); return; }
     empIdAEliminar = null;
