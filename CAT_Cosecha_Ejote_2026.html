@@ -200,6 +200,7 @@ tbody tr:hover td { background: var(--bg2); }
 .num { text-align: right; font-family: 'DM Mono', monospace; }
 .group-row td { background: var(--bg3); font-size: 11px; font-weight: 600; color: var(--text2); padding: 6px 12px; letter-spacing: 0.05em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
 .total-row td { font-weight: 600; border-top: 2px solid var(--border2); background: var(--bg2); }
+.subtotal-row td { font-weight: 500; border-top: 1px dashed var(--border2); background: var(--bg2); font-size: 12px; color: var(--text2); }
 .empty { text-align: center; padding: 40px; color: var(--text3); font-size: 13px; }
 
 /* BADGES */
@@ -762,18 +763,38 @@ function renderResumen() {
   let html = '';
   Object.entries(loteGroups).forEach(([lote, items]) => {
     html += `<tr class="group-row"><td colspan="7">${lote}</td></tr>`;
-    items.forEach(r => {
-      const prom = r.totalHa > 0 ? Math.round(r.totalCub / r.totalHa) : 0;
-      html += `<tr>
-        <td></td><td>${r.seccion}</td><td>Tabla ${r.tabla}</td>
-        <td class="num">${r.maxCorte > 0 ? r.maxCorte : '—'}</td>
-        <td class="num">${r.cubetas.toLocaleString()}</td>
-        <td class="num">${prom ? prom.toLocaleString() : '—'}</td>
-        <td><span class="badge b-${(r.variedad||'').toLowerCase()}">${r.variedad||'—'}</span></td>
+
+    // Agrupar por sección dentro del lote
+    const secGroups = {};
+    items.forEach(r => { if (!secGroups[r.seccion]) secGroups[r.seccion] = []; secGroups[r.seccion].push(r); });
+
+    Object.entries(secGroups).forEach(([seccion, secItems]) => {
+      secItems.forEach(r => {
+        const prom = r.totalHa > 0 ? Math.round(r.totalCub / r.totalHa) : 0;
+        html += `<tr>
+          <td></td><td>${r.seccion}</td><td>Tabla ${r.tabla}</td>
+          <td class="num">${r.maxCorte > 0 ? r.maxCorte : '—'}</td>
+          <td class="num">${r.cubetas.toLocaleString()}</td>
+          <td class="num">${prom ? prom.toLocaleString() : '—'}</td>
+          <td><span class="badge b-${(r.variedad||'').toLowerCase()}">${r.variedad||'—'}</span></td>
+        </tr>`;
+      });
+      // Subtotal por sección
+      const totSec = secItems.reduce((s,i) => s+i.cubetas, 0);
+      const totHaSec = secItems.reduce((s,i) => s+i.totalHa, 0);
+      const promSec = totHaSec > 0 ? Math.round(totSec / totHaSec) : 0;
+      html += `<tr class="subtotal-row">
+        <td colspan="4" style="font-size:12px;color:var(--text2);padding-left:24px">Total ${seccion}</td>
+        <td class="num">${totSec.toLocaleString()}</td>
+        <td class="num">${promSec ? promSec.toLocaleString() : '—'}</td>
+        <td></td>
       </tr>`;
     });
+
     const totL = items.reduce((s,i) => s+i.cubetas, 0);
-    html += `<tr class="total-row"><td colspan="5" style="font-size:12px;color:var(--text2)">Total ${lote}</td><td class="num">${totL.toLocaleString()}</td><td></td></tr>`;
+    const totHaL = items.reduce((s,i) => s+i.totalHa, 0);
+    const promL = totHaL > 0 ? Math.round(totL / totHaL) : 0;
+    html += `<tr class="total-row"><td colspan="4" style="font-size:12px;color:var(--text2)">Total ${lote}</td><td class="num">${totL.toLocaleString()}</td><td class="num">${promL ? promL.toLocaleString() : '—'}</td><td></td></tr>`;
   });
 
   if (!html) html = `<tr><td colspan="7" class="empty">Sin registros todavía</td></tr>`;
