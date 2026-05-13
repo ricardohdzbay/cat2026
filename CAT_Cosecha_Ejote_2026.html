@@ -665,7 +665,6 @@ function pedirEliminar(id) {
   idAEliminar = id;
   document.getElementById('confirm-txt').textContent = `¿Eliminar: ${r.lote} / ${r.seccion} / Tabla ${r.tabla} — ${fmtF(r.fecha)}?`;
   document.getElementById('confirm-bar').classList.add('visible');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function confirmarEliminar() {
@@ -960,7 +959,6 @@ function pedirEliminarEmpaque(id) {
   empIdAEliminar = id;
   document.getElementById('confirm-txt').textContent = `¿Eliminar empaque: ${fmtF(r.fechaISO)} — ${r.totCajas.toLocaleString()} cajas?`;
   document.getElementById('confirm-bar').classList.add('visible');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function renderEmpHist() {
