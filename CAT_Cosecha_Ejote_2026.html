@@ -660,7 +660,8 @@ function limpiarCaptura() {
 function fmtF(f) { if (!f) return ''; const [y,m,d] = f.split('-'); return `${d}/${m}/${y}`; }
 
 function pedirEliminar(id) {
-  const r = registros.find(x => x.id === id);
+  id = Number(id);
+  const r = registros.find(x => Number(x.id) === id);
   if (!r) return;
   idAEliminar = id;
   document.getElementById('confirm-txt').textContent = `¿Eliminar: ${r.lote} / ${r.seccion} / Tabla ${r.tabla} — ${fmtF(r.fecha)}?`;
@@ -954,7 +955,8 @@ async function confirmarGuardadoEmpaque() {
 }
 
 function pedirEliminarEmpaque(id) {
-  const r = empRegistros.find(x => x.id === id);
+  id = Number(id);
+  const r = empRegistros.find(x => Number(x.id) === id);
   if (!r) return;
   empIdAEliminar = id;
   document.getElementById('confirm-txt').textContent = `¿Eliminar empaque: ${fmtF(r.fechaISO)} — ${r.totCajas.toLocaleString()} cajas?`;
@@ -1011,15 +1013,11 @@ function renderEmpHist() {
       <td class="num">${n(r.lbEmp)}</td>
       <td class="num">${n(r.lbMermaCalc)}</td>
       <td class="num">${r.pctMerma}%</td>
-      <td><button class="btn btn-danger" data-empid="${r.id}">Eliminar</button></td>
+      <td><button class="btn btn-danger" onclick="pedirEliminarEmpaque(${r.id})">Eliminar</button></td>
     </tr>`;
   }).join('');
 
   document.getElementById('emp-hist-total').textContent = `Acumulado: ${totCajasAcum.toLocaleString()} cajas · ${totCubAcum.toLocaleString('es-MX',{maximumFractionDigits:1})} cubetas pasadas`;
-
-  document.querySelectorAll('#tbody-emp-hist .btn-danger').forEach(btn => {
-    btn.addEventListener('click', () => pedirEliminarEmpaque(Number(btn.dataset.empid)));
-  });
 }
 
 
