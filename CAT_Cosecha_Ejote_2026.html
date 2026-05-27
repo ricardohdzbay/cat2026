@@ -333,7 +333,7 @@ Producción
       <table>
         <thead><tr>
           <th>Lote</th><th>Sección</th><th>Tabla</th>
-          <th class="num">Cortes</th><th class="num">Total cubetas</th><th class="num">Prom. cub/ha</th><th>Variedad</th>
+          <th class="num">Cortes</th><th class="num">Ha</th><th class="num">Total cubetas</th><th class="num">Prom. cub/ha</th><th>Variedad</th>
         </tr></thead>
         <tbody id="tbody-resumen"></tbody>
       </table>
@@ -733,10 +733,12 @@ function renderResumen() {
   const dias    = [...new Set(registros.map(r => r.fecha))].length;
   const lotes   = [...new Set(registros.map(r => r.lote))].length;
   const promG   = registros.length > 0 ? Math.round(registros.reduce((s,r) => s+(r.cubPorHa||0), 0) / registros.length) : 0;
+  const totHa   = registros.reduce((s,r) => s+(r.ha||0), 0);
 
   document.getElementById('metrics-area').innerHTML = `
     <div class="metric"><div class="mlbl">Total cubetas</div><div class="mval">${totCub.toLocaleString()}</div><div class="msub">acumulado mayo</div></div>
     <div class="metric"><div class="mlbl">Prom. cub/ha</div><div class="mval">${promG.toLocaleString()}</div><div class="msub">promedio general</div></div>
+    <div class="metric"><div class="mlbl">Ha cosechadas</div><div class="mval">${totHa.toLocaleString('es-MX',{maximumFractionDigits:1})}</div><div class="msub">temporada</div></div>
     <div class="metric"><div class="mlbl">Días registrados</div><div class="mval">${dias}</div><div class="msub">de 31 posibles</div></div>
     <div class="metric"><div class="mlbl">Lotes activos</div><div class="mval">${lotes}</div><div class="msub">en historial</div></div>`;
 
@@ -774,6 +776,7 @@ function renderResumen() {
         html += `<tr>
           <td></td><td>${r.seccion}</td><td>Tabla ${r.tabla}</td>
           <td class="num">${r.maxCorte > 0 ? r.maxCorte : '—'}</td>
+          <td class="num">${r.totalHa > 0 ? r.totalHa.toLocaleString('es-MX',{maximumFractionDigits:1}) : '—'}</td>
           <td class="num">${r.cubetas.toLocaleString()}</td>
           <td class="num">${prom ? prom.toLocaleString() : '—'}</td>
           <td><span class="badge b-${(r.variedad||'').toLowerCase()}">${r.variedad||'—'}</span></td>
@@ -785,6 +788,7 @@ function renderResumen() {
       const promSec = totHaSec > 0 ? Math.round(totSec / totHaSec) : 0;
       html += `<tr class="subtotal-row">
         <td colspan="4" style="font-size:12px;color:var(--text2);padding-left:24px">Total ${seccion}</td>
+        <td class="num">${totHaSec > 0 ? totHaSec.toLocaleString('es-MX',{maximumFractionDigits:1}) : '—'}</td>
         <td class="num">${totSec.toLocaleString()}</td>
         <td class="num">${promSec ? promSec.toLocaleString() : '—'}</td>
         <td></td>
@@ -794,7 +798,7 @@ function renderResumen() {
     const totL = items.reduce((s,i) => s+i.cubetas, 0);
     const totHaL = items.reduce((s,i) => s+i.totalHa, 0);
     const promL = totHaL > 0 ? Math.round(totL / totHaL) : 0;
-    html += `<tr class="total-row"><td colspan="4" style="font-size:12px;color:var(--text2)">Total ${lote}</td><td class="num">${totL.toLocaleString()}</td><td class="num">${promL ? promL.toLocaleString() : '—'}</td><td></td></tr>`;
+    html += `<tr class="total-row"><td colspan="4" style="font-size:12px;color:var(--text2)">Total ${lote}</td><td class="num">${totHaL > 0 ? totHaL.toLocaleString('es-MX',{maximumFractionDigits:1}) : '—'}</td><td class="num">${totL.toLocaleString()}</td><td class="num">${promL ? promL.toLocaleString() : '—'}</td><td></td></tr>`;
   });
 
   if (!html) html = `<tr><td colspan="7" class="empty">Sin registros todavía</td></tr>`;
